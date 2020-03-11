@@ -4,6 +4,7 @@ using namespace std;
 void permu(int,int[],bool[]);
 void printPerma1(int [],int,int,bool []);
 void printPerma2(int [],int,int,bool []);
+ int fact(int);
 bool leftToRight = false;
 bool rightToLeft = true;
 
@@ -14,49 +15,81 @@ int main() {
         for(int i=0;i<n;i++) {
                 a[i] = i+1;
         }
+        for(int i=0;i<n;i++) {
+                cout<<a[i]<<" ";
+        }
+        cout<<endl;
          for(int i=0;i<n;i++) {
                 dir[i] = rightToLeft;
         }
         
-        for(int i=0;i<5;i++) {
+        
+        for(int i=0;i<(fact(n)-1);i++) {
                 permu(n,a,dir);
         }
+ }
+ 
+ int fact(int n) {
+     if(n==1) {
+         return 1;
+     }
+     else {
+         return n*fact(n-1);
+     }
  }
  
  
  void permu(int n,int a[],bool dir[]) {
         int i,max1,max2;
-        for(int i=0;i<n;i++) {
-                cout<<a[i]<<" ";
-        }
-        cout<<endl;
-       
         
-        max1 = 0;
-        max2 = 0;
+        max1 = -1;
+        max2 = -1;
         for(i=0;i<n;i++) {
                 if(dir[i]==leftToRight) {
-                        if(a[i]>a[i+1] && i+1!=n) {
-                                max1 = i;
+                        if(a[i]>a[i+1] && i+1<n) {
+                                if(max1==-1 || a[max1]<a[i]) {
+                                    max1 = i;
+                                }
                         }
                 }
                 
                 if(dir[i]==rightToLeft) {
                         if(i>0 && a[i]>a[i-1]) {
-                                max2 = i;
+                                if( max2==-1||a[max2]<a[i]) {
+                                    max2 = i;
+                                }
                         }
                 }
        }
-       if(max1>max2) {
+       
+       //cout<<a[max1]<<" "<<a[max2]<<endl;
+       //cout<<"max1 "<<max1<<"max2 "<<max2<<endl;
+       if(max1==-1) {
+           printPerma2(a,n,max2,dir);
+       }
+       else if(max2==-1) {
+           printPerma1(a,n,max1,dir);
+       }
+       else 
+       if(a[max1]>a[max2]) {
+                
                 printPerma1(a,n,max1,dir);
-        }
-       else {
+           
+       }
+       else
+       if(a[max1]<a[max2]) {
+                
                 printPerma2(a,n,max2,dir);
-        }
+           
+       }
 }
 
 void printPerma1(int a[],int n,int max,bool dir[]) {
         swap(a[max+1],a[max]);
+        //swap(dir[max+1],dir[max]);
+        bool temp = dir[max+1];
+        dir[max+1] = dir[max];
+        dir[max] = temp;
         int max1 = a[max+1];
         for(int i=0;i<n;i++) {
                 if(max1<a[i]) {
@@ -68,11 +101,19 @@ void printPerma1(int a[],int n,int max,bool dir[]) {
                         }
                 }
         }
-                             
+        //cout<<a[max+1]<<endl;
+        for(int i=0;i<n;i++) {
+                cout<<a[i]<<" ";
+        }
+        cout<<endl;
 }            
                   
 void printPerma2(int a[],int n,int max,bool dir[]) {
         swap(a[max-1],a[max]);
+        //swap(dir[max-1],dir[max]);
+        bool temp = dir[max-1];
+        dir[max-1] = dir[max];
+        dir[max] = temp;
         int max1 = a[max-1];
         for(int i=0;i<n;i++) {
                 if(max1<a[i]) {
@@ -84,8 +125,12 @@ void printPerma2(int a[],int n,int max,bool dir[]) {
                         }
                 }
         }
-                             
+          
+          //cout<<a[max-1]<<endl;
+          for(int i=0;i<n;i++) {
+                cout<<a[i]<<" ";
+        }   
+        cout<<endl;
+        
 }                         
-        
-        
         
